@@ -1,0 +1,75 @@
+﻿@using Teema.Models
+@using Teema.Helpers
+@model ThreadShowModel
+
+@{
+    ViewBag.Title = Model.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section scripts{
+    <script src="~/Scripts/showthread.js"></script>
+}
+
+<div class="table-bordered row" style="margin:0px;">
+    <h3 class="col-lg-10 pull-left" style="vertical-align:middle">
+        @if (Model.OriginalParentId != Model.ParentId) {<a href="@Url.Action("Show", "Thread", new { teema = Model.Teema, linkId = Model.LinkId, parentPostId=Model.OriginalParentId })" class="glyphicon glyphicon-chevron-left" style="text-decoration:none; color:inherit"></a>}@Model.Title
+    </h3>
+    <a class="col-lg-2 pull-right" href="@Url.Action("Show", "Teema", new { teema = Model.Teema })" style="text-decoration:none; color:red; font-size:60px;text-align:center; height:72px">
+        <span class="glyphicon glyphicon-remove-circle"></span>
+    </a>
+</div>
+<input id="teema" type="hidden" value="@Model.Teema" />
+<input id="linkId" type="hidden" value="@Model.LinkId" />
+<br>
+<ul class="list-group">
+    @foreach (PostShowModel post in Model.Posts) {
+        <li class="list-group-item post @(post.IsSelected ? "active" : "")" data-parentid="@post.ParentId" data-postid="@post.Id">
+            <div class="media">
+                <div class="media-left">
+                    <img src="@Url.Action("GetAvatar", "Account", new { username = post.Author })" class="img-circle" alt="Picture of @post.Author" style="width:40px; height:40px" />
+                </div>
+                <div class="media-body">
+                    <div class="media-heading">
+                        <div class="col-lg-8 col-sm-8 col-xs-8 text-muted post-info" style="padding-left:0px">
+                            @Html.Raw(Formatting.getFormattedUsername(post.Author)) | @Formatting.getFormattedDate(post.Date) | @if (User.Identity.IsAuthenticated) {<a href="#comment" class="comment-btn">Comment</a>} else {<a href="@Url.Action("Login", "Account", new { ReturnUrl = Request.Url.AbsolutePath })">Comment</a>}
+                        </div>
+                        <div class="col-lg-4 col-sm-4 col-xs-4 vote-panel" style="text-align:right">
+                            @{
+                                //css code
+                                string upvoteColor = post.Vote == 1 ? "LawnGreen" : "inherit";
+                                string downvoteColor = post.Vote == -1 ? "red" : "inherit";
+                                string upvoteDisplay = post.Vote == -1 ? "display:none" : "";
+                                string downvoteDisplay = post.Vote == 1 ? "display:none" : "";
+                                string upvoteLink = User.Identity.IsAuthenticated ? "javascript:upvote(@post.Id)" : Url.Action("Login", "Account", new { ReturnUrl = Request.Url.AbsolutePath });
+                                string downvoteLink = User.Identity.IsAuthenticated ? "javascript:downvote(@post.Id)" : Url.Action("Login", "Account", new { ReturnUrl = Request.Url.AbsolutePath });
+                            }
+                            <div class="modify-post" style="display:@(Model.UserRole >= TeemaRoles.Moderator || post.Author == User.Identity.Name ? "inline" : "none")">
+                                <a href="#edit-post" class="edit-post"><span class="glyphicon glyphicon-edit"></span></a>
+                                <a href="#remove-post" class="remove-post">&#10005;</a>
+                            </div>
+                            <a href="@upvoteLink" class="upvote" style="text-decoration:none; color:@upvoteColor; @upvoteDisplay"><span class="glyphicon glyphicon-plus"></span></a>
+                            <a href="@downvoteLink" class="downvote" style="text-decoration:none; color:@downvoteColor; @downvoteDisplay"><span class="glyphicon glyphicon-minus"></span></a>
+                            <span class="badge">@post.Karma</span>
+
+                        </div>
+                    </div>
+                    <div class="message format">@post.Message</div>
+                    <div class="user-link">
+                        <div class="title"></div>
+                        <div class="link"></div>
+                    </div>
+                    <div class="col-xs-12 comment">
+                    </div>
+                    <div class="comments" style="border-left:1px solid;">
+                        @if (post.HasHiddenChildPosts) {
+                            @Html.ActionLink("More Comments", "Show", "Thread", new { teema = Model.Teema, linkId = Model.LinkId, parentPostId = post.Id }, new { @class = "btn btn-default" })
+                        }
+                        <ul class="list-group"></ul>
+                    </div>
+                </div>
+            </div>
+
+
+        </li>
+    }
+</ul>

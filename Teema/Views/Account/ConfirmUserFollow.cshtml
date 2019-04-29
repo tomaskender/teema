@@ -1,0 +1,23 @@
+﻿@using Teema.Models
+@using Teema.Helpers;
+
+@model ConfirmUserFollow
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">@(Model.IsFollowing ? "Unfollow" : "Follow")</h4>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to @(Model.IsFollowing ? "unfollow" : "follow") @Html.Raw(Formatting.getFormattedUsername(Model.Name)) ?</p>
+        </div>
+        <div class="modal-footer">
+            @using (Html.BeginForm(Model.IsFollowing ? "Unfollow" : "Follow", "Account", FormMethod.Post)) {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("target", Model.Name)
+                <input type="submit" value="@(Model.IsFollowing?"Unfollow" : "Follow")" class="btn btn-primary"/>
+            }
+        </div>
+    </div>
+</div>

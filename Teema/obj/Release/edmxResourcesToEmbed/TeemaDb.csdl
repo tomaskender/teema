@@ -1,0 +1,441 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TeemaDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Country">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Code" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Users" Relationship="Self.FK_Users_Countries" FromRole="Countries" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="Follow">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FollowerId" Type="Int32" Nullable="false" />
+    <Property Name="FollowedId" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="FollowedUser" Relationship="Self.FK_Follows_Users" FromRole="Follows" ToRole="Users" />
+    <NavigationProperty Name="FollowerUser" Relationship="Self.FK_Follows_Users1" FromRole="Follows" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="NotificationGroupMember">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NotificationGroupId" Type="Int32" Nullable="false" />
+    <Property Name="SourceId" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="NotificationGroup" Relationship="Self.FK_NotificationGroupMembers_NotificationGroups" FromRole="NotificationGroupMembers" ToRole="NotificationGroups" />
+    <NavigationProperty Name="User" Relationship="Self.FK_NotificationGroupMembers_Users" FromRole="NotificationGroupMembers" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="NotificationGroup">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TargetId" Type="Int32" Nullable="false" />
+    <Property Name="EventType" Type="Int32" Nullable="false" />
+    <Property Name="EventId" Type="Int32" Nullable="false" />
+    <Property Name="Seen" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="NotificationGroupMembers" Relationship="Self.FK_NotificationGroupMembers_NotificationGroups" FromRole="NotificationGroups" ToRole="NotificationGroupMembers" />
+    <NavigationProperty Name="User" Relationship="Self.FK_NotificationGroups_Users" FromRole="NotificationGroups" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="Post">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AuthorId" Type="Int32" Nullable="false" />
+    <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Message" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ParentPostId" Type="Int32" />
+    <Property Name="ThreadId" Type="Int32" Nullable="false" />
+    <Property Name="Karma" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Posts1" Relationship="Self.FK_Posts_Posts1" FromRole="Posts" ToRole="Posts1" />
+    <NavigationProperty Name="Post1" Relationship="Self.FK_Posts_Posts1" FromRole="Posts1" ToRole="Posts" />
+    <NavigationProperty Name="Thread" Relationship="Self.FK_Posts_Threads" FromRole="Posts" ToRole="Threads" />
+    <NavigationProperty Name="User" Relationship="Self.FK_Posts_Users1" FromRole="Posts" ToRole="Users" />
+    <NavigationProperty Name="Votes" Relationship="Self.FK_Votes_Posts" FromRole="Posts" ToRole="Votes" />
+  </EntityType>
+  <EntityType Name="Subscription">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="TeemaId" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="Teema" Relationship="Self.FK_Subscriptions_Teemas" FromRole="Subscriptions" ToRole="Teemas" />
+    <NavigationProperty Name="User" Relationship="Self.FK_Subscriptions_Users" FromRole="Subscriptions" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="TeemaAccess">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="TeemaId" Type="Int32" Nullable="false" />
+    <Property Name="RoleId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Teema" Relationship="Self.FK_TeemaAccess_Teemas" FromRole="TeemaAccess" ToRole="Teemas" />
+    <NavigationProperty Name="User" Relationship="Self.FK_TeemaAccess_Users" FromRole="TeemaAccess" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="Teema">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
+    <Property Name="AnyoneCanView" Type="Boolean" Nullable="false" />
+    <Property Name="AnyoneCanPost" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Subscriptions" Relationship="Self.FK_Subscriptions_Teemas" FromRole="Teemas" ToRole="Subscriptions" />
+    <NavigationProperty Name="TeemaAccesses" Relationship="Self.FK_TeemaAccess_Teemas" FromRole="Teemas" ToRole="TeemaAccess" />
+    <NavigationProperty Name="Threads" Relationship="Self.FK_Threads_Teemas" FromRole="Teemas" ToRole="Threads" />
+  </EntityType>
+  <EntityType Name="Thread">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="LinkId" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="TeemaId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Posts" Relationship="Self.FK_Posts_Threads" FromRole="Threads" ToRole="Posts" />
+    <NavigationProperty Name="Teema" Relationship="Self.FK_Threads_Teemas" FromRole="Threads" ToRole="Teemas" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Registered" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CountryId" Type="Int32" Nullable="false" />
+    <Property Name="HasPrivateProfile" Type="Boolean" Nullable="false" />
+    <Property Name="Avatar" Type="Binary" MaxLength="3000" FixedLength="false" />
+    <Property Name="IsVerified" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Country" Relationship="Self.FK_Users_Countries" FromRole="Users" ToRole="Countries" />
+    <NavigationProperty Name="Follows" Relationship="Self.FK_Follows_Users" FromRole="Users" ToRole="Follows" />
+    <NavigationProperty Name="Follows1" Relationship="Self.FK_Follows_Users1" FromRole="Users" ToRole="Follows" />
+    <NavigationProperty Name="NotificationGroupMembers" Relationship="Self.FK_NotificationGroupMembers_Users" FromRole="Users" ToRole="NotificationGroupMembers" />
+    <NavigationProperty Name="NotificationGroups" Relationship="Self.FK_NotificationGroups_Users" FromRole="Users" ToRole="NotificationGroups" />
+    <NavigationProperty Name="Posts" Relationship="Self.FK_Posts_Users1" FromRole="Users" ToRole="Posts" />
+    <NavigationProperty Name="Subscriptions" Relationship="Self.FK_Subscriptions_Users" FromRole="Users" ToRole="Subscriptions" />
+    <NavigationProperty Name="TeemaAccesses" Relationship="Self.FK_TeemaAccess_Users" FromRole="Users" ToRole="TeemaAccess" />
+    <NavigationProperty Name="Verifications" Relationship="Self.FK_Verifications_Users" FromRole="Users" ToRole="Verifications" />
+    <NavigationProperty Name="Votes" Relationship="Self.FK_Votes_Users" FromRole="Users" ToRole="Votes" />
+  </EntityType>
+  <EntityType Name="Verification">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="Code" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="User" Relationship="Self.FK_Verifications_Users" FromRole="Verifications" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="Vote">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="PostId" Type="Int32" Nullable="false" />
+    <Property Name="IsUpvote" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Post" Relationship="Self.FK_Votes_Posts" FromRole="Votes" ToRole="Posts" />
+    <NavigationProperty Name="User" Relationship="Self.FK_Votes_Users" FromRole="Votes" ToRole="Users" />
+  </EntityType>
+  <Association Name="FK_Users_Countries">
+    <End Role="Countries" Type="Self.Country" Multiplicity="1" />
+    <End Role="Users" Type="Self.User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Countries">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="CountryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Follows_Users">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="Follows" Type="Self.Follow" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Follows">
+        <PropertyRef Name="FollowedId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Follows_Users1">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="Follows" Type="Self.Follow" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Follows">
+        <PropertyRef Name="FollowerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_NotificationGroupMembers_NotificationGroups">
+    <End Role="NotificationGroups" Type="Self.NotificationGroup" Multiplicity="1" />
+    <End Role="NotificationGroupMembers" Type="Self.NotificationGroupMember" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NotificationGroups">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NotificationGroupMembers">
+        <PropertyRef Name="NotificationGroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_NotificationGroupMembers_Users">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="NotificationGroupMembers" Type="Self.NotificationGroupMember" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NotificationGroupMembers">
+        <PropertyRef Name="SourceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_NotificationGroups_Users">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="NotificationGroups" Type="Self.NotificationGroup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="NotificationGroups">
+        <PropertyRef Name="TargetId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Posts_Posts1">
+    <End Role="Posts" Type="Self.Post" Multiplicity="0..1" />
+    <End Role="Posts1" Type="Self.Post" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Posts">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Posts1">
+        <PropertyRef Name="ParentPostId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Posts_Threads">
+    <End Role="Threads" Type="Self.Thread" Multiplicity="1" />
+    <End Role="Posts" Type="Self.Post" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Threads">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Posts">
+        <PropertyRef Name="ThreadId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Posts_Users1">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="Posts" Type="Self.Post" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Posts">
+        <PropertyRef Name="AuthorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Votes_Posts">
+    <End Role="Posts" Type="Self.Post" Multiplicity="1" />
+    <End Role="Votes" Type="Self.Vote" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Posts">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Votes">
+        <PropertyRef Name="PostId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Subscriptions_Teemas">
+    <End Role="Teemas" Type="Self.Teema" Multiplicity="1" />
+    <End Role="Subscriptions" Type="Self.Subscription" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Teemas">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Subscriptions">
+        <PropertyRef Name="TeemaId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Subscriptions_Users">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="Subscriptions" Type="Self.Subscription" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Subscriptions">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TeemaAccess_Teemas">
+    <End Role="Teemas" Type="Self.Teema" Multiplicity="1" />
+    <End Role="TeemaAccess" Type="Self.TeemaAccess" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Teemas">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TeemaAccess">
+        <PropertyRef Name="TeemaId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TeemaAccess_Users">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="TeemaAccess" Type="Self.TeemaAccess" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TeemaAccess">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Threads_Teemas">
+    <End Role="Teemas" Type="Self.Teema" Multiplicity="1" />
+    <End Role="Threads" Type="Self.Thread" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Teemas">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Threads">
+        <PropertyRef Name="TeemaId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Verifications_Users">
+    <End Role="Users" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Verifications" Type="Self.Verification" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Verifications">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Votes_Users">
+    <End Role="Users" Type="Self.User" Multiplicity="1" />
+    <End Role="Votes" Type="Self.Vote" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Votes">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="TeemaDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Countries" EntityType="Self.Country" />
+    <EntitySet Name="Follows" EntityType="Self.Follow" />
+    <EntitySet Name="NotificationGroupMembers" EntityType="Self.NotificationGroupMember" />
+    <EntitySet Name="NotificationGroups" EntityType="Self.NotificationGroup" />
+    <EntitySet Name="Posts" EntityType="Self.Post" />
+    <EntitySet Name="Subscriptions" EntityType="Self.Subscription" />
+    <EntitySet Name="TeemaAccesses" EntityType="Self.TeemaAccess" />
+    <EntitySet Name="Teemas" EntityType="Self.Teema" />
+    <EntitySet Name="Threads" EntityType="Self.Thread" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <EntitySet Name="Verifications" EntityType="Self.Verification" />
+    <EntitySet Name="Votes" EntityType="Self.Vote" />
+    <AssociationSet Name="FK_Users_Countries" Association="Self.FK_Users_Countries">
+      <End Role="Countries" EntitySet="Countries" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Follows_Users" Association="Self.FK_Follows_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Follows" EntitySet="Follows" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Follows_Users1" Association="Self.FK_Follows_Users1">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Follows" EntitySet="Follows" />
+    </AssociationSet>
+    <AssociationSet Name="FK_NotificationGroupMembers_NotificationGroups" Association="Self.FK_NotificationGroupMembers_NotificationGroups">
+      <End Role="NotificationGroups" EntitySet="NotificationGroups" />
+      <End Role="NotificationGroupMembers" EntitySet="NotificationGroupMembers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_NotificationGroupMembers_Users" Association="Self.FK_NotificationGroupMembers_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="NotificationGroupMembers" EntitySet="NotificationGroupMembers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_NotificationGroups_Users" Association="Self.FK_NotificationGroups_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="NotificationGroups" EntitySet="NotificationGroups" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Posts_Posts1" Association="Self.FK_Posts_Posts1">
+      <End Role="Posts" EntitySet="Posts" />
+      <End Role="Posts1" EntitySet="Posts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Posts_Threads" Association="Self.FK_Posts_Threads">
+      <End Role="Threads" EntitySet="Threads" />
+      <End Role="Posts" EntitySet="Posts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Posts_Users1" Association="Self.FK_Posts_Users1">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Posts" EntitySet="Posts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Votes_Posts" Association="Self.FK_Votes_Posts">
+      <End Role="Posts" EntitySet="Posts" />
+      <End Role="Votes" EntitySet="Votes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Subscriptions_Teemas" Association="Self.FK_Subscriptions_Teemas">
+      <End Role="Teemas" EntitySet="Teemas" />
+      <End Role="Subscriptions" EntitySet="Subscriptions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Subscriptions_Users" Association="Self.FK_Subscriptions_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Subscriptions" EntitySet="Subscriptions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TeemaAccess_Teemas" Association="Self.FK_TeemaAccess_Teemas">
+      <End Role="Teemas" EntitySet="Teemas" />
+      <End Role="TeemaAccess" EntitySet="TeemaAccesses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TeemaAccess_Users" Association="Self.FK_TeemaAccess_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="TeemaAccess" EntitySet="TeemaAccesses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Threads_Teemas" Association="Self.FK_Threads_Teemas">
+      <End Role="Teemas" EntitySet="Teemas" />
+      <End Role="Threads" EntitySet="Threads" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Verifications_Users" Association="Self.FK_Verifications_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Verifications" EntitySet="Verifications" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Votes_Users" Association="Self.FK_Votes_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Votes" EntitySet="Votes" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

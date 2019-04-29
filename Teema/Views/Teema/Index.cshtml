@@ -1,0 +1,103 @@
+﻿@using Teema.Models
+@using Teema.Helpers
+
+@model ThreadListModel
+
+@{
+    ViewBag.Title = "Home";
+}
+<div class="row">
+    @{//featured teemas
+        for (int i = 0; i < Model.FeaturedTeemas.Count; i++) {
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <h3>@Model.FeaturedTeemas[i].Name</h3>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            @Model.FeaturedTeemas[i].Description
+                        </p>
+                        <p class="pull-right">@Html.ActionLink("Explore /t/" + Model.FeaturedTeemas[i].Name + " »", "Show", "Teema", new { teema = Model.FeaturedTeemas[i].Name }, null)</p>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+<div class="row">
+    <div class="col-md-9">
+        @if (User.Identity.IsAuthenticated) {
+            <div class="container">
+                <ul class="nav navbar-nav nav-tabs">
+                    <li @(Model.ShowingSubscribedThreads? "" : "class=active")><a href="/">Global</a></li>
+                    <li @(Model.ShowingSubscribedThreads? "class=active" : "")><a href="/?showSubscriptions=true">Subscribed</a></li>
+                </ul>
+            </div>
+        }
+        <ul class="list-group">
+            @foreach (ThreadListMemberModel thread in Model.Threads) {
+                <li class="list-group-item">
+                    <div class="col-sm-2 col-xs-3 text-muted">@Formatting.getFormattedDate(thread.Created)</div>
+                    <div class="col-sm-8 col-xs-6">
+                        <p class="thread-info">
+                            <a href="/t/@thread.Teema" class="teema-link">#@thread.Teema</a>
+                            | posted by <span class="glyphicon glyphicon-user"></span> @Html.Raw(Formatting.getFormattedUsername(thread.Author))
+                        </p>
+                        @Html.ActionLink(thread.Title, "Show", "Thread", new { teema = thread.Teema, linkId = thread.LinkId }, new { @class = "thread-title" })
+                    </div>
+                    <div class="col-sm-2 col-xs-3 text-center">
+                        @{
+                            string karmaGlyphiconColor = "grey";
+                            if (thread.Karma > 0) {
+                                karmaGlyphiconColor = "red";
+                            } else if (thread.Karma < 0) {
+                                karmaGlyphiconColor = "black";
+                            }
+                        }
+                        <span class="glyphicon glyphicon-heart" style="color:@(karmaGlyphiconColor)"></span> @thread.Karma
+                        <span class="badge">@thread.CommentsCount comments</span>
+                    </div>
+                </li>
+            }
+        </ul>
+        @if (Model.PreviousPageExists || Model.NextPageExists) {
+            <div class="col-xs-12">
+                <ul class="nav navbar-nav">
+                    @if (Model.PreviousPageExists) {
+                        <li>@Html.ActionLink("Previous Page", "Index", "Teema", new { showSubscriptions= Model.ShowingSubscribedThreads, page = Model.Page - 1 }, null)</li>}
+                    @if (Model.NextPageExists) {
+                        <li>@Html.ActionLink("Next Page", "Index", "Teema", new { showSubscriptions = Model.ShowingSubscribedThreads, page = Model.Page + 1 }, null)</li>}
+                </ul>
+            </div>
+        }
+    </div>
+    <div class="col-md-3">
+
+        @if (HttpContext.Current.User.Identity.IsAuthenticated) {
+            <ul class="list-group horizontal-event-list">
+                @foreach (ShowEventModel showEvent in Model.FollowedUsersEvents) {
+                    <li class="list-group-item list-group-item-warning">
+                        @Html.Raw(Formatting.getFormattedUsername(showEvent.Username)) <a href="@showEvent.Link" style="color:inherit">@showEvent.Action</a>
+                    </li>
+                }
+            </ul>
+        }
+        <ul class="list-group">
+            @foreach (TeemaListMemberModel teema in Model.Teemas) {
+                <li class="list-group-item">
+                    <div class="col-xs-2">
+                        @if (teema.IsSubscribed) {
+                            <span class="glyphicon glyphicon-bookmark" style="color:red"></span>
+                        }
+                    </div>
+                    <div class="col-xs-10">
+                        <a href="@Url.Action("Show", "Teema", new { teema=teema.Name})">#@teema.Name</a>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

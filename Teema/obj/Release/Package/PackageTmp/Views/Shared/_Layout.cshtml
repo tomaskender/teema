@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Teema</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        
+    </style>
+</head>
+<body>
+    <div class="navbar-inverse navbar-fixed-top" data-spy="affix" data-offset-top="197">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @*@Html.ActionLink("T", "Index", "Teema", new { area = "" }, new { @class = "navbar-brand" })*@
+                <a class="navbar-brand" href="/"><img class="logo" src="~/Content/Images/logo.png" /></a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Teema")</li>
+                    @*<li>@Html.ActionLink("Teemas", "Teemas", "Teema")</li>*@
+                    @if (User.Identity.IsAuthenticated) {
+                        <li>@Html.ActionLink("Create Teema", "Create", "Teema")</li>
+                        <li>@Html.ActionLink("Profile", "ShowUser", "Account", new { username = User.Identity.Name }, null)</li>
+                        <li>
+                            <a href='@Url.Action("Logout", "Account", new { ReturnUrl = Request.Url.AbsolutePath })'>
+                                <span class="glyphicon glyphicon-off"></span>
+                            </a>
+                        </li>
+                    } else {
+                        <li>@Html.ActionLink("Login", "Login", "Account", new { ReturnUrl = HttpContext.Current.Request.Url.AbsolutePath }, null)</li>
+                        <li>@Html.ActionLink("Register", "Register", "Account")</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content" style="padding-top:10px">
+
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Teema</p>
+        </footer>
+    </div>
+    <div class="chat-sidebar" style="display:none">
+        <div class="sidebar-name" id="sidebar-name-template" style="display:none">
+            <!-- Pass username and display name to register popup -->
+            <a href="#">
+                <img class="img-circle" width="30" height="30" src="@Url.Action("GetAvatar", "Account")" />
+                <span>Name</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="chat-windows"></div>
+
+    <div class="popup-box chat-popup" id="popup-box-template" style="display:none">
+        <div class="popup-head">
+            <div class="popup-head-left">Name</div>
+            <div class="popup-head-right"><a href="javascript:closePopup(id);">&#10005;</a></div>
+            <div style="clear: both"></div>
+        </div>
+        <div class="popup-messages">
+            <div id="message-receiver-template" class="panel panel-primary col-lg-8" style="background-color:aliceblue; color:black; margin-top:3px; margin-bottom:3px; padding:2px; font-size:11px">hi</div>
+            <div id="message-sender-template" class="panel panel-primary col-lg-8 col-lg-offset-4" style="background-color:darkslategray; color:azure; margin-top:3px; margin-bottom:3px; padding:2px; font-size:11px">hi</div>
+        </div>
+        <input class="popup-input" />
+    </div>
+
+    <div class="notifications-bar">
+        <div id="notifications-message-template" class="notifications-message" data-link="">
+                Placeholder
+        </div>
+    </div>
+
+    @if (User.Identity.IsAuthenticated) {
+        <button class="sidebar-opener sidebar-btn">
+            <div id="show-chat-btn"><span class="glyphicon glyphicon-ok-circle"></span> Show Chat</div>
+            <div id="hide-chat-btn"><span class="glyphicon glyphicon-ban-circle"></span> Hide Chat</div>
+        </button>
+        <button class="notifications-opener">
+            <span class="glyphicon glyphicon-comment"></span>
+            <span class="glyphicon glyphicon-asterisk notifications-asterisk"></span>
+        </button>
+    } else {
+        <button class="sidebar-opener" onclick="location.href = '@Url.Action("Login","Account", new { ReturnUrl = @Request.Url.AbsolutePath })'">
+            <div id="show-chat"><span class="glyphicon glyphicon-ban-circle"></span> You're Offline</div>
+        </button>
+    }
+    <div id="modal" class="modal fade" role="dialog"></div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/signalr")
+    <!--Scripts.Render("~/bundles/jqueryajax")-->
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/format.js"></script>
+    <script src="@Url.Content("~/signalr/hubs")"></script>
+    <script src="~/Scripts/js.cookie.js"></script>
+    <script src="~/Scripts/chat.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,150 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/*input,*/
+select,
+textarea {
+    /*width: 100%;*/
+    resize: none;
+    overflow-y: scroll;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+.restricted-width {
+    max-width: 280px;
+}
+
+.message {
+    padding: 10px;
+}
+
+.user-link {
+    border: 2px solid #ddd;
+    margin: 10px;
+    padding: 5px;
+    padding-left: 10px;
+    /*zapina sa cez javascript vo format.js*/
+    display: none;
+}
+
+
+    .user-link .title {
+        font-size: 25px;
+    }
+
+    .user-link .link {
+        color: dimgrey;
+    }
+
+.post {
+    padding-right: 0px;
+    display: none;
+}
+
+.list-group-item {
+    overflow-y: auto;
+}
+
+.btn {
+    margin: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
+.list-group-item.active {
+    color: inherit;
+    background-color: #ffd943;
+    border: inherit;
+}
+
+    .list-group-item.active:hover {
+        color: inherit;
+        background-color: #ffd943;
+        border: inherit;
+    }
+
+div {
+    color: #565656;
+}
+
+a {
+    color: black;
+}
+
+    a:hover {
+        color: dimgrey;
+    }
+
+.thread-info {
+    /*font-size: 12px;*/
+    margin-bottom: 0px;
+}
+
+.horizontal-event-list {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.navbar-brand {
+    padding-top: 3px;
+}
+
+.logo {
+    width: 80px;
+    height: 40px;
+}
+
+.modal-content {
+    width: 600px !important;
+    margin: 30px auto !important;
+}
+
+.navbar-brand {
+    opacity: 0.4;
+}
+
+    .navbar-brand:hover {
+        opacity: 1;
+    }
+
+.thread-title {
+    color: midnightblue;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+    .thread-title:hover {
+        color: blue;
+    }
+
+.teema-link {
+    font-weight:bold;
+    font-size:15px;
+    color: darkorange;
+}
+
+    .teema-link:hover {
+        color: orange;
+    }
+
+.media-heading {
+    overflow: hidden;
+    padding: 5px;
+    border-bottom: 1px solid;
+}

@@ -1,0 +1,43 @@
+﻿@using Teema.Models
+@using Teema.Helpers
+@model AccountProfileModel
+
+<div class="panel panel-info">
+    <div class="panel-heading">Bio</div>
+    <div class="panel-body">
+        <p class="text-muted">Registered: @Formatting.getFormattedDate(Model.Registered)</p>
+        <p class="format">@Model.Description</p>
+    </div>
+</div>
+<div class="panel panel-info">
+    <div class="panel-heading">Activities</div>
+    <div class="panel-body">
+        @if (!Model.HasPrivateProfile || Model.IsFriendsWith || User.Identity.Name == Model.Username) {
+            if (Model.Events.Count > 0) {
+                <div class="panel-group">
+                    @for (int a = 0; a < Model.Events.Count; a += 6) {
+                    <div class="row" style="padding-top:25px">
+                        @for (int b = 0; b + a < Model.Events.Count && b < 6; b++) {
+                        <div class="col-md-2">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">@Formatting.getFormattedDate(Model.Events[a + b].Date)</div>
+                                <div class="panel-body">
+                                    <p>@Model.Events[a + b].Action</p>
+                                    <p class="format" style="word-wrap:break-word">@Model.Events[a + b].Message</p>
+                                </div>
+                                <div class="panel-footer"><a href="@Model.Events[a + b].Link">@Model.Events[a + b].Link</a></div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                    }
+                </div>
+            } else {
+                <p>Hmm, seems like this user hasn't done anything yet.</p>
+            }
+        } else {
+            <p>This user decided to hide his activities.</p>
+        }
+    </div>
+</div>
+@{ <script src="~/Scripts/format.js"></script>}

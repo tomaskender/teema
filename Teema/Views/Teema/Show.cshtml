@@ -1,0 +1,103 @@
+﻿@using Teema.Models
+@using Teema.Helpers
+
+@model TeemaShowModel
+
+@{
+    ViewBag.Title = "#" + Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="teema-link"><h1>#@Html.ActionLink(Model.Name, "Show", "Teema", new { teema = Model.Name }, new { id = "name", style = "color:inherit" })</h1></div>
+<p>» @Model.Description</p>
+@if (HttpContext.Current.User.Identity.IsAuthenticated) {
+    if (Model.AnyoneCanPost) {
+        <a id="create-thread-button" class="btn btn-primary" href="#create-thread">+</a>
+    }
+    <a id="subscription-button" class="btn @(Model.IsSubscribed ? "btn-danger" : "btn-primary")" href="#subscription">@(Model.IsSubscribed ? "Unsubscribe" : "Subscribe")</a>
+} else {
+    <a class="btn btn-primary" href="@Url.Action("Login", "Account", new { ReturnUrl = Request.Url.AbsolutePath })">+</a>
+    <a class="btn btn-primary" href="@Url.Action("Login", "Account", new { ReturnUrl=Request.Url.AbsolutePath})">Subscribe</a>
+}
+<div class="row">
+    <div class="col-sm-8">
+        <ul class="list-group">
+            @foreach (ThreadListMemberModel thread in Model.ThreadList.Threads) {
+                <li class="list-group-item">
+                    <div class="col-sm-2 col-xs-3 text-muted">@Formatting.getFormattedDate(thread.Created)</div>
+                    <div class="col-sm-8 col-xs-6">
+                        <p class="thread-info">
+                            posted by <span class="glyphicon glyphicon-user"></span> @Html.Raw(Formatting.getFormattedUsername(thread.Author))
+                        </p>
+
+                        @Html.ActionLink(thread.Title, "Show", "Thread", new { teema = Model.Name, linkId = thread.LinkId }, new { @class = "thread-title" })
+                    </div>
+                    <div class="col-sm-2 col-xs-3 text-center">
+                        @{
+                            string karmaGlyphiconColor = "grey";
+                            if (thread.Karma > 0) {
+                                karmaGlyphiconColor = "red";
+                            } else if (thread.Karma < 0) {
+                                karmaGlyphiconColor = "black";
+                            }
+                        }
+                        <span class="glyphicon glyphicon-heart" style="color:@(karmaGlyphiconColor)"></span> @thread.Karma
+                        @if (Model.UserRole >= TeemaRoles.Moderator) {
+                            @Html.ActionLink(HttpUtility.HtmlDecode("&#10005;"), "Delete", "Thread", new { teema = thread.Teema, linkId = thread.LinkId }, null)
+                        }
+                        <span class="badge">@thread.CommentsCount comments</span>
+
+                    </div>
+                </li>
+            }
+        </ul>
+        @if (Model.ThreadList.PreviousPageExists || Model.ThreadList.NextPageExists) {
+            <div class="col-xs-12">
+                <ul class="nav navbar-nav">
+                    @if (Model.ThreadList.PreviousPageExists) {
+                        <li>@Html.ActionLink("Previous Page", "Show", "Teema", new { teema = Model.Name, page = Model.ThreadList.Page - 1 }, null)</li>}
+                    @if (Model.ThreadList.NextPageExists) {
+                        <li>@Html.ActionLink("Next Page", "Show", "Teema", new { teema = Model.Name, page = Model.ThreadList.Page + 1 }, null)</li>}
+                </ul>
+            </div>
+        }
+    </div>
+    <div class="panel col-sm-4">
+        <h3>Moderators</h3>
+        @if (Model.UserRole >= TeemaRoles.Admin) {
+            <div class="nav navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a id="add-roles-button" href="#add-roles">Add Role</a></li>
+                    <li><a id="edit-roles-button" href="#edit-roles">Edit Roles</a></li>
+                    <li><a id="modify-settings-button" href="#modify-settings">Settings</a></li>
+                </ul>
+            </div>
+        }
+        <div>
+            <ul class="list-group" id="privileged-users-list">
+                @foreach (TeemaPrivilegedListMemberModel user in Model.PriviledAccountModels.Users) {
+                    <li class="list-group-item">
+                        @{
+                            string color = "white";
+                            switch ((int)user.Role) {
+                                case 5: color = "red "; break;
+                                case 4: color = "gold"; break;
+                                case 3: color = "forestgreen"; break;
+                                default: break;
+                            }
+                        }
+                        <span class="glyphicon glyphicon-flash" style="color:@color" title="@user.Role"></span>
+                        @Html.ActionLink(user.Username, "ShowUser", "Account", new { username = user.Username }, null)
+                        <img src="~/Content/Images/blank.gif" class="flag flag-@user.CountryCode" />
+
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/showteema.js"></script>
+}
+

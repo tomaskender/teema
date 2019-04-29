@@ -1,0 +1,49 @@
+﻿@using Teema.Models
+@using Teema.Helpers;
+
+@model ConfirmSubscription
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">@(Model.IsSubscribed ? "Unsubscribe" : "Subscribe")</h4>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to @(Model.IsSubscribed ? "unsubscribe from" : "subscribe to") teema called @Model.Teema?</p>
+        </div>
+        <div class="modal-footer">
+            @using (Html.BeginForm(Model.IsSubscribed ? "Unsubscribe" : "Subscribe", "Teema", FormMethod.Post)) {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("teema", Model.Teema)
+                <input type="submit" value="@(Model.IsSubscribed?"Unsubscribe" : "Subscribe")" class="btn btn-primary" />
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#modal").on("submit", function (e) {
+        e.preventDefault();  // prevent standard form submission
+
+        var form = $('#modal').find('form');
+        $.ajax({
+            url: form.attr("action"),
+            method: form.attr("method"),  // post
+            data: form.serialize(),
+            dataType: 'html'
+        }).done(function () {
+            if ($('#subscription-button').hasClass('btn-primary')) {
+                $('#subscription-button').removeClass('btn-primary');
+                $('#subscription-button').addClass('btn-danger');
+                $('#subscription-button').text('Unsubscribe');
+            } else {
+                $('#subscription-button').removeClass('btn-danger');
+                $('#subscription-button').addClass('btn-primary');
+                $('#subscription-button').text('Subscribe');
+            }
+            $('#modal').modal('hide');
+
+        });
+    });
+</script>

@@ -1,0 +1,21 @@
+﻿@using Teema.Models
+
+@model PostDeleteModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Delete Post</h4>
+        </div>
+
+            <div class="modal-body" style="overflow:hidden">
+                <p>Are you sure you want to remove this post?</p>
+            </div>
+            <div class="modal-footer">
+                <input type="submit" onclick="confirmDeletePost('@Model.Teema',@Model.PostId)" value="Delete" class="btn btn-danger" />
+            </div>
+    </div>
+</div>
+
+

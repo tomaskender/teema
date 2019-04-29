@@ -1,0 +1,10 @@
+﻿@using Teema.Helpers
+@model string
+
+@{
+    ViewBag.Title = "VerifyAccount";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>Your account @Html.Raw(Formatting.getFormattedUsername(Model)) is now verified! You can continue by logging in.</h3>
+

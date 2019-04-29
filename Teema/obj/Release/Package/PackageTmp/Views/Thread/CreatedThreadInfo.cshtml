@@ -1,0 +1,19 @@
+﻿@using Teema.Models;
+
+@model ThreadCreatedInfoModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Create Thread</h4>
+        </div>
+        <div class="modal-body" style="overflow:hidden">
+            Your new thread called @Html.ActionLink(Model.Title, "Show", "Thread", new { teema = Model.Teema, linkId = Model.LinkId }, null) was created! You can now open it by clicking on the button below.
+        </div>
+        <div class="modal-footer">
+            @Html.ActionLink("Open", "Show", "Thread", new { teema = Model.Teema, linkId = Model.LinkId }, new { @class = "btn btn-primary" })
+        </div>
+
+    </div>
+</div>

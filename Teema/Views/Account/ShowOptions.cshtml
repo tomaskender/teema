@@ -1,0 +1,64 @@
+﻿@using Teema.Models
+
+@model AccountOptionsModel
+
+<div class="panel panel-info">
+    <div class="panel-heading">Options</div>
+    <div class="panel-body">
+        @using (Html.BeginForm("SaveOptions", "Account", FormMethod.Post, new { enctype = "multipart/form-data", id="options-form" })) {
+            @Html.AntiForgeryToken()
+    <!--<div class="modal-body">-->
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.Label("avatar", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @*@Html.EditorFor(model => model.Avatar, new { htmlAttributes = new { @class = "form-control", type = "file", accept = ".png,.jpg,.jpeg,.gif,.tif" } })*@
+                    <input type="file" name="avatar" id="avatar" accept=".png,.jpg,.jpeg" @*accept = "image/*"*@ class="form-control restricted-width" />
+                    @Html.ValidationMessage("avatar", "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.Description, new { @class = "form-control", default_value = Model.Description })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.HasPrivateProfile, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.HasPrivateProfile, new { htmlAttributes = new { @class = "form-control", default_value = Model.HasPrivateProfile, style = "width:10px; height:10px" } })
+                    @Html.ValidationMessageFor(model => model.HasPrivateProfile, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.NewPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.NewPassword, new { htmlAttributes = new { @class = "form-control restricted-width" } })
+                    @Html.ValidationMessageFor(model => model.NewPassword, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ConfirmNewPassword, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ConfirmNewPassword, new { htmlAttributes = new { @class = "form-control restricted-width" } })
+                    @Html.ValidationMessageFor(model => model.ConfirmNewPassword, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </div>
+
+        </div>
+        }
+    </div>
+</div>

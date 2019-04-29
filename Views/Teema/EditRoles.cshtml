@@ -1,0 +1,74 @@
+﻿@using Teema.Models;
+@using Teema.Helpers;
+
+@model List<AccountRoleModel>
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Edit Roles</h4>
+        </div>
+
+        @using (Html.BeginForm("EditRoles", "Teema", FormMethod.Post, new { id = "form-addrole", @class = "full-form" })) {
+            <div class="modal-body">
+                @Html.AntiForgeryToken()
+                <ul class="list-group">
+                    @for (int i = 0; i < Model.Count; i++) {
+                        @Html.HiddenFor(model => model[i].Username, Model[i].Username)
+                        <li class="list-group-item">
+                            <div class="col-xs-6">
+                                <div style="height:34px;display:flex;align-items:center">
+                                    @Html.Raw(Formatting.getFormattedUsername(Model[i].Username))
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div style="display: inline-block;">
+                                    @{
+                                        string color = "white";
+                                        switch ((int)Model[i].Role) {
+                                            case 5: color = "red "; break;
+                                            case 4: color = "gold"; break;
+                                            case 3: color = "forestgreen"; break;
+                                            default: color = "black"; break;
+                                        }
+                                    }
+                                    <span class="glyphicon glyphicon-flash" style="color:@color" title="@Model[i].Role"></span>
+                                    @Html.ValueFor(model => model[i].Role)
+                                    <span class="glyphicon glyphicon-menu-right"></span>
+                                </div>
+                                <div style="display: inline-block">
+                                    @Html.EnumDropDownListFor(model => model[i].Role, new { @class = "form-control", style = "width:auto" })
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+                @Html.Hidden("teema", (object)ViewBag.teema)
+
+            </div>
+            <br />
+            <br />
+            <div class="modal-footer">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $("form").on("submit", function (e) {
+            e.preventDefault();  // prevent standard form submission
+            var form = $(this);
+            $.ajax({
+                url: form.attr("action"),
+                method: form.attr("method"),  // post
+                data: form.serialize(),
+                success: function (partialResult) {
+                    $("#modal").html(partialResult);
+                }
+            });
+        });
+    </script>
+}

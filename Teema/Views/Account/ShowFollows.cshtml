@@ -1,0 +1,28 @@
+﻿@using Teema.Models;
+@using Teema.Helpers;
+
+@model FollowListModel
+
+@if (Model.FollowerList.Count() == 0) {
+    <p>Hmm, seems like this user doesnt follow anyone yet.</p>
+} else {
+    <div class="panel-group col-md-12">
+        @foreach (FollowListMemberModel listMember in Model.FollowerList) {
+            <div class="col-lg-2">
+                @{
+                    string color;
+                    if (listMember.FollowsBack == FollowStatus.Following) {
+                        color = "success";
+                    } else if (listMember.FollowsBack == FollowStatus.NotFollowing) {
+                        color = "danger";
+                    } else {
+                        color = "info";
+                    }
+                }
+                <div class="text-center panel panel-@color" style="width:100%">
+                    <div class="panel-heading">@Html.Raw(Formatting.getFormattedUsername(listMember.FollowedUsername))</div>
+                </div>
+            </div>
+        }
+    </div>
+}

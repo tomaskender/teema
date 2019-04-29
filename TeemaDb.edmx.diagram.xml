@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="8ed2a065f6634d9db4f2be4b918dcbb1" Name="Diagram1" ZoomLevel="64">
+        <EntityTypeShape EntityType="TeemaDBModel.TeemaAccess" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TeemaDBModel.Teema" Width="1.5" PointX="2.75" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TeemaDBModel.Thread" Width="1.5" PointX="0.75" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TeemaDBModel.Country" Width="1.5" PointX="4.75" PointY="3.75" />
+        <EntityTypeShape EntityType="TeemaDBModel.Follow" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TeemaDBModel.Subscription" Width="1.5" PointX="6.75" PointY="3.75" />
+        <EntityTypeShape EntityType="TeemaDBModel.Vote" PointX="8.875" PointY="0.75" Width="1.5" />
+        <EntityTypeShape EntityType="TeemaDBModel.Verification" Width="1.5" PointX="8.75" PointY="3.75" />
+        <AssociationConnector Association="TeemaDBModel.FK_Subscriptions_Teemas" />
+        <AssociationConnector Association="TeemaDBModel.FK_TeemaAccess_Teemas" />
+        <AssociationConnector Association="TeemaDBModel.FK_Threads_Teemas" />
+        <EntityTypeShape EntityType="TeemaDBModel.NotificationGroupMember" Width="1.5" PointX="4.75" PointY="6.125" />
+        <EntityTypeShape EntityType="TeemaDBModel.NotificationGroup" Width="1.5" PointX="6.75" PointY="6.125" />
+        <AssociationConnector Association="TeemaDBModel.FK_NotificationGroupMembers_NotificationGroups" />
+        <EntityTypeShape EntityType="TeemaDBModel.Post" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="TeemaDBModel.User" Width="1.5" PointX="4.75" PointY="0.75" />
+        <AssociationConnector Association="TeemaDBModel.FK_Users_Countries" />
+        <AssociationConnector Association="TeemaDBModel.FK_Follows_Users" />
+        <AssociationConnector Association="TeemaDBModel.FK_Follows_Users1" />
+        <AssociationConnector Association="TeemaDBModel.FK_NotificationGroupMembers_Users" />
+        <AssociationConnector Association="TeemaDBModel.FK_NotificationGroups_Users" />
+        <AssociationConnector Association="TeemaDBModel.FK_Posts_Posts1" />
+        <AssociationConnector Association="TeemaDBModel.FK_Posts_Threads" />
+        <AssociationConnector Association="TeemaDBModel.FK_Posts_Users1" />
+        <AssociationConnector Association="TeemaDBModel.FK_Votes_Posts" />
+        <AssociationConnector Association="TeemaDBModel.FK_Subscriptions_Users" />
+        <AssociationConnector Association="TeemaDBModel.FK_TeemaAccess_Users" />
+        <AssociationConnector Association="TeemaDBModel.FK_Verifications_Users" />
+        <AssociationConnector Association="TeemaDBModel.FK_Votes_Users" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

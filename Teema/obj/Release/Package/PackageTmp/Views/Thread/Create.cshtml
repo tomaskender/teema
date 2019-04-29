@@ -1,0 +1,64 @@
+﻿@using Teema.Models;
+
+@model ThreadCreateModel
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Create Thread</h4>
+        </div>
+
+        @using (Html.BeginForm(FormMethod.Post)) {
+            @Html.AntiForgeryToken()
+
+            <div class="modal-body" style="overflow:hidden">
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                @Html.HiddenFor(model => model.Teema, (object)ViewBag.teema)
+
+                <div class="form-group" style="overflow:hidden">
+                    @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" style="overflow:hidden">
+                    @Html.LabelFor(model => model.Message, new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(model => model.Message, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <input type="submit" value="Create Thread" class="btn btn-primary" />
+            </div>
+        }
+
+    </div>
+</div>
+
+<script>
+    $('form').submit(function (e) {
+        e.preventDefault();
+        var form = $(this);
+
+        $.ajax({
+            url: form.attr("action"),
+            method: form.attr("method"),  // post
+            data: new FormData(this),
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (partialResult) {
+                $("#modal").html(partialResult);
+            }
+        });
+    });
+</script>
+

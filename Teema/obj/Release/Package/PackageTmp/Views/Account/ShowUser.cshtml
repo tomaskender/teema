@@ -1,0 +1,64 @@
+﻿@using Teema.Models
+@using Teema.Helpers
+
+@model AccountShowModel
+@{
+    ViewBag.Title = "@" + Model.Username;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="media">
+    <div class="media-left">
+        <img src="@Url.Action("GetAvatar", "Account", new { username=Model.Username})" class="media-object img-circle" alt="Picture of @Model.Username" style="width:40px; height:40px" />
+    </div>
+    <div class="media-body">
+        <h3 class="media-heading" style="border-bottom:none">
+            @Html.Raw(Formatting.getFormattedUsername(Model.Username))
+        </h3>
+        <p>from @Model.Country</p>
+    </div>
+</div>
+
+<div class="tabbable">
+    <div class="navbar-collapse">
+        <ul class="nav navbar-nav nav-tabs">
+            <li><a id="profile-button" href="#profile-tab" data-toggle="tab">Profile</a></li>
+            @if (!Model.HasPrivateProfile || Model.IsFriendsWith || User.Identity.Name == Model.Username) {
+                <li><a id="subscriptions-button" href="#subscriptions-tab" data-toggle="tab">Subscriptions (@Model.SubscriptionsCount)</a></li>
+                <li><a id="follows-button" href="#follows-tab" data-toggle="tab">Follows (@Model.FollowsCount)</a></li>
+            } else {
+                <li class="disabled"><a href="#">Subscriptions</a></li>
+                <li class="disabled"><a href="#">Follows</a></li>
+            }
+            @if (User.Identity.Name != Model.Username) {
+                if (User.Identity.IsAuthenticated) {
+                    <li><a id="follow-button" href="#follow-tab" data-toggle="modal" data-target="#modal">@(Model.IsFollowing ? "Unfollow" : "Follow")</a></li>
+                } else {
+                    <li>@Html.ActionLink("Follow", "Login", new { ReturnUrl = Request.Url.AbsolutePath }, null)</li>
+                }
+            } else {
+                <li><a id="options-button" href="#options-tab" data-toggle="tab">Options</a></li>
+            }
+        </ul>
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane active" id="profile-tab">
+            @Html.Action("ShowProfile", new { username = Model.Username })
+        </div>
+        <div class="tab-pane" id="subscriptions-tab">
+            @Html.Action("ShowSubscriptions", new { username = Model.Username })
+        </div>
+        <div class="tab-pane" id="follows-tab">
+            @Html.Action("ShowFollows", new { username = Model.Username })
+        </div>
+        @if (User.Identity.Name == Model.Username) {
+            <div class="tab-pane" id="options-tab">
+                @Html.Action("ShowOptions", new { username = Model.Username })
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/showuser.js"></script>
+}
